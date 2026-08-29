@@ -31,20 +31,20 @@ docker compose -p gameprice-mvp up --detach --wait db
 backend/.venv/bin/python backend/manage.py check
 backend/.venv/bin/python backend/manage.py makemigrations --check --dry-run
 backend/.venv/bin/python backend/manage.py migrate --noinput
-backend/.venv/bin/python backend/manage.py test --verbosity 1
+backend/.venv/bin/python backend/manage.py test prices --verbosity 1
 backend/.venv/bin/python backend/manage.py seed_mvp_catalog \
   --actor human-product-owner --human-approved
 backend/.venv/bin/python backend/manage.py ingest_price \
   22222222-2222-4222-8222-222222222222 \
   --idempotency-key fixture-gate-v1 \
   --actor operator-fixture \
-  --fixture prices/tests/fixtures/steam_success.json \
+  --fixture backend/prices/tests/fixtures/steam_success.json \
   --fetched-at 2026-08-29T02:00:00Z > "$GAMEPRICE_ACCEPTED_JSON"
 backend/.venv/bin/python backend/manage.py ingest_price \
   22222222-2222-4222-8222-222222222222 \
   --idempotency-key fixture-gate-v1 \
   --actor operator-fixture \
-  --fixture prices/tests/fixtures/steam_success.json \
+  --fixture backend/prices/tests/fixtures/steam_success.json \
   --fetched-at 2026-08-29T02:00:00Z > "$GAMEPRICE_REPLAY_JSON"
 rg -q '"outcome": "ACCEPTED"' "$GAMEPRICE_ACCEPTED_JSON"
 rg -q '"outcome": "DUPLICATE"' "$GAMEPRICE_REPLAY_JSON"

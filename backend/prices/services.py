@@ -394,6 +394,14 @@ def run_ingestion(
             retryable=exc.retryable,
         )
         raise IngestionRejected(exc.code) from None
+    except Exception:
+        _record_failure(
+            run_id=run.id,
+            actor_identity=actor_identity,
+            code="INTERNAL_FETCH_FAILURE",
+            retryable=True,
+        )
+        raise IngestionError("INTERNAL_FETCH_FAILURE") from None
     try:
         return _accept_candidate(
             run_id=run.id,

@@ -178,6 +178,26 @@ class IngestionServiceTests(TestCase):
         self.assertEqual(result.outcome, "ACCEPTED")
         self.assertEqual(PriceObservation.objects.count(), 1)
 
+    def test_unexpected_fetch_failure_is_redacted_and_retryable(self):
+        fake_secret = "FAKE_SECRET_SHOULD_NOT_ESCAPE"
+
+        def unexpected(_mapping):
+            raise RuntimeError(fake_secret)
+
+        with self.assertRaises(IngestionError) as raised:
+            run_ingestion(
+                mapping_id=self.mapping.id,
+                idempotency_key="unexpected-fetch",
+                actor_identity="operator",
+                fetcher=unexpected,
+            )
+        self.assertEqual(raised.exception.code, "INTERNAL_FETCH_FAILURE")
+        run = IngestionRun.objects.get(idempotency_key="unexpected-fetch")
+        self.assertEqual(run.state, "FAILED_RETRYABLE")
+        self.assertEqual(run.failure_message, "INTERNAL_FETCH_FAILURE")
+        self.assertNotIn(fake_secret, run.failure_message)
+        self.assertFalse(PriceObservation.objects.exists())
+
     def test_injected_partial_write_rolls_back_then_retries(self):
         value = candidate(self.mapping, receipt_suffix="6")
         with self.assertRaises(IngestionError) as raised:

@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 from django.utils import timezone
 
 
-ADAPTER_REVISION = "steam-appdetails-v1"
+ADAPTER_REVISION = "steam-appdetails-v2-krw-scale"
 REQUEST_TIMEOUT_SECONDS = 10.0
 MAX_RESPONSE_BYTES = 1_000_000
 STORE_HOST = "store.steampowered.com"
@@ -69,6 +69,13 @@ def _require_amount(value: object, code: str) -> int:
     return value
 
 
+def _normalize_krw_amount(value: object, code: str) -> int:
+    source_amount = _require_amount(value, code)
+    if source_amount % 100 != 0:
+        raise AdapterError("INVALID_KRW_AMOUNT_SCALE")
+    return source_amount // 100
+
+
 def normalize_steam_response(
     *, external_product_id: str, normalized_url: str, response: HttpResponse
 ) -> SteamCandidate:
@@ -97,10 +104,12 @@ def normalize_steam_response(
     currency = price.get("currency")
     if currency != "KRW":
         raise AdapterError("UNSUPPORTED_CURRENCY")
-    current_amount = _require_amount(price.get("final"), "INVALID_CURRENT_AMOUNT")
+    current_amount = _normalize_krw_amount(price.get("final"), "INVALID_CURRENT_AMOUNT")
     regular_value = price.get("initial")
     regular_amount = (
-        None if regular_value is None else _require_amount(regular_value, "INVALID_REGULAR_AMOUNT")
+        None
+        if regular_value is None
+        else _normalize_krw_amount(regular_value, "INVALID_REGULAR_AMOUNT")
     )
     if regular_amount is not None and current_amount > regular_amount:
         raise AdapterError("CURRENT_EXCEEDS_REGULAR")

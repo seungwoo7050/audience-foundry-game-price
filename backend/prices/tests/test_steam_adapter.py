@@ -107,10 +107,15 @@ class SteamAdapterTests(SimpleTestCase):
     def test_non_integer_and_impossible_discount_are_rejected(self):
         url = build_normalized_url("1091500")
         bodies = [
-            b'{"1091500":{"success":true,"data":{"steam_appid":1091500,"name":"Cyberpunk 2077","price_overview":{"currency":"KRW","initial":66000,"final":true,"discount_percent":50}}}}',
-            b'{"1091500":{"success":true,"data":{"steam_appid":1091500,"name":"Cyberpunk 2077","price_overview":{"currency":"KRW","initial":66000,"final":33000,"discount_percent":0}}}}',
+            b'{"1091500":{"success":true,"data":{"steam_appid":1091500,"name":"Cyberpunk 2077","price_overview":{"currency":"KRW","initial":6600000,"final":true,"discount_percent":50}}}}',
+            b'{"1091500":{"success":true,"data":{"steam_appid":1091500,"name":"Cyberpunk 2077","price_overview":{"currency":"KRW","initial":6600000,"final":3300000,"discount_percent":0}}}}',
+            b'{"1091500":{"success":true,"data":{"steam_appid":1091500,"name":"Cyberpunk 2077","price_overview":{"currency":"KRW","initial":6600000,"final":3299999,"discount_percent":50}}}}',
         ]
-        expected = ["INVALID_CURRENT_AMOUNT", "INCONSISTENT_DISCOUNT"]
+        expected = [
+            "INVALID_CURRENT_AMOUNT",
+            "INCONSISTENT_DISCOUNT",
+            "INVALID_KRW_AMOUNT_SCALE",
+        ]
         for body, code in zip(bodies, expected, strict=True):
             with self.subTest(code=code), self.assertRaises(AdapterError) as raised:
                 normalize_steam_response(

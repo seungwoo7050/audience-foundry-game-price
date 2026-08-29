@@ -8,7 +8,7 @@ from typing import Callable
 from django.db import IntegrityError, transaction
 from django.utils import timezone
 
-from .adapters.steam import AdapterError, SteamCandidate, fetch_steam_candidate
+from .adapters.steam import ADAPTER_REVISION, AdapterError, SteamCandidate, fetch_steam_candidate
 from .models import (
     AuditEvent,
     IngestionRun,
@@ -370,7 +370,7 @@ def run_ingestion(
             mapping_id=mapping_id,
             idempotency_key=idempotency_key,
             actor_identity=actor_identity,
-            adapter_revision="steam-appdetails-v1",
+            adapter_revision=ADAPTER_REVISION,
         )
     except IngestionRejected as exc:
         _audit(

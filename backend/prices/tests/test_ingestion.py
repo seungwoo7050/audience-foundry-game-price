@@ -212,6 +212,19 @@ class IngestionServiceTests(TestCase):
         self.assertFalse(IngestionRun.objects.exists())
         self.assertTrue(AuditEvent.objects.filter(failure_code="MAPPING_NOT_APPROVED").exists())
 
+    def test_observation_before_tracking_start_is_rejected_without_canonical_write(self):
+        too_early = candidate(
+            self.mapping,
+            fetched_at=self.mapping.tracking_started_at - timedelta(seconds=1),
+            receipt_suffix="9",
+        )
+        with self.assertRaises(IngestionRejected) as raised:
+            self.ingest("before-tracking", too_early)
+        self.assertEqual(raised.exception.code, "OBSERVATION_BEFORE_TRACKING_START")
+        self.assertFalse(SourceReceipt.objects.exists())
+        self.assertFalse(PriceObservation.objects.exists())
+        self.assertFalse(PublishedPriceProjection.objects.exists())
+
 
 class ConcurrentIngestionTests(TransactionTestCase):
     reset_sequences = True

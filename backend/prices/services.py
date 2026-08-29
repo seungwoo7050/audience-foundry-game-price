@@ -254,6 +254,9 @@ def _accept_candidate(
         )
         if not _mapping_is_approved(mapping):
             raise IngestionRejected("MAPPING_APPROVAL_CHANGED")
+        candidate_time = candidate.source_observed_at or candidate.fetched_at
+        if candidate_time < mapping.tracking_started_at:
+            raise IngestionRejected("OBSERVATION_BEFORE_TRACKING_START")
         existing_receipt = SourceReceipt.objects.filter(
             receipt_identity=candidate.receipt_identity
         ).first()

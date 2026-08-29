@@ -1,9 +1,9 @@
 import hashlib
 import uuid
+from datetime import UTC, datetime
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.utils import timezone
 
 from prices.models import Game, Store, StoreProduct, VerificationDecision
 
@@ -76,7 +76,7 @@ class Command(BaseCommand):
                 "edition_key": "standard",
                 "edition_label": "Standard Edition",
                 "mapping_state": StoreProduct.MappingState.APPROVED,
-                "tracking_started_at": timezone.now(),
+                "tracking_started_at": datetime(2026, 8, 29, tzinfo=UTC),
                 "mapping_approval_decision": mapping_decision,
             },
         )

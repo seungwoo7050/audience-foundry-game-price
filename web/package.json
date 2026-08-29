@@ -10,7 +10,8 @@
   },
   "scripts": {
     "check": "astro check",
-    "build": "astro build"
+    "build": "astro build",
+    "test:render": "node scripts/assert-build.mjs"
   },
   "dependencies": {
     "astro": "7.2.9"

@@ -1,0 +1,35 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="GamePrice KR 홈">
+        <span class="brand-mark">GP</span>
+        <span>GamePrice KR</span>
+      </a>
+      <span class="coverage">Steam · 한국 지역</span>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>가격은 승인된 관찰 시점의 정보이며 판매처에서 변경될 수 있습니다.</p>
+    </footer>
+  </body>
+</html>

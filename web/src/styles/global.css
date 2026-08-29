@@ -1,0 +1,66 @@
+:root {
+  color-scheme: dark;
+  --ink: #f5f3ec;
+  --muted: #aaa89f;
+  --line: #33322f;
+  --panel: #1b1b19;
+  --accent: #dbff4a;
+  --accent-ink: #151700;
+  font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif;
+  background: #11110f;
+  color: var(--ink);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+a { color: inherit; }
+.site-header, main, footer { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+.site-header { height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 750; text-decoration: none; letter-spacing: -.02em; }
+.brand-mark { display: grid; place-items: center; width: 38px; height: 38px; background: var(--accent); color: var(--accent-ink); border-radius: 10px; font-size: 13px; font-weight: 900; }
+.coverage, .edition, small { color: var(--muted); }
+.hero { padding: 110px 0 90px; max-width: 780px; }
+.eyebrow { margin: 0 0 18px; color: var(--accent); font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+h1, h2, p { margin-top: 0; }
+.hero h1, .game-heading h1 { font-size: clamp(44px, 8vw, 88px); line-height: .98; letter-spacing: -.065em; margin-bottom: 28px; }
+.hero-copy { max-width: 650px; color: #cac8c0; font-size: 19px; line-height: 1.75; }
+.catalog { border-top: 1px solid var(--line); padding: 56px 0 100px; }
+.catalog h2 { font-size: 28px; }
+.game-link { margin-top: 30px; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; text-decoration: none; transition: border-color .2s, transform .2s; }
+.game-link:hover { border-color: var(--accent); transform: translateY(-2px); }
+.game-link strong, .game-link small { display: block; }
+.game-link strong { font-size: 22px; margin-bottom: 8px; }
+.breadcrumb { display: flex; gap: 10px; padding: 28px 0 60px; color: var(--muted); font-size: 14px; }
+.price-page { padding-bottom: 100px; }
+.game-heading { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; }
+.game-heading h1 { margin-bottom: 14px; }
+.edition { font-size: 18px; }
+.verified { background: #263216; color: var(--accent); padding: 9px 13px; border-radius: 999px; font-size: 13px; font-weight: 750; white-space: nowrap; }
+.price-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; margin: 50px 0 22px; }
+.price-card { min-height: 250px; padding: 30px; border-radius: 22px; display: flex; flex-direction: column; align-items: flex-start; }
+.price-card span { font-size: 15px; font-weight: 750; }
+.price-card strong { margin-top: auto; font-size: clamp(42px, 7vw, 72px); letter-spacing: -.06em; }
+.price-card.current { background: var(--accent); color: var(--accent-ink); }
+.price-card.current del { opacity: .55; margin-top: 5px; }
+.price-card.current em { margin-top: 12px; padding: 7px 10px; background: #151700; color: var(--accent); border-radius: 8px; font-size: 13px; font-style: normal; font-weight: 800; }
+.price-card.low { background: var(--panel); border: 1px solid var(--line); }
+.price-card.low small { margin-top: 8px; }
+.scope-note { display: flex; gap: 18px; padding: 26px; border: 1px solid var(--line); border-radius: 18px; }
+.scope-note h2 { font-size: 17px; margin-bottom: 8px; }
+.scope-note p { color: var(--muted); line-height: 1.65; margin-bottom: 0; }
+.scope-icon { flex: 0 0 auto; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-weight: 900; }
+.details { margin: 28px 0 0; border-top: 1px solid var(--line); }
+.details div { display: grid; grid-template-columns: 160px 1fr; padding: 20px 4px; border-bottom: 1px solid var(--line); }
+.details dt { color: var(--muted); }
+.details dd { margin: 0; }
+footer { border-top: 1px solid var(--line); padding: 34px 0 50px; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 720px) {
+  .coverage { display: none; }
+  .hero { padding-top: 72px; }
+  .price-grid { grid-template-columns: 1fr; }
+  .price-card { min-height: 220px; }
+  .game-heading { display: block; }
+  .verified { display: inline-block; margin-top: 10px; }
+  .details div { grid-template-columns: 110px 1fr; }
+}

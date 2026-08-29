@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getGamePrice, type GamePriceV1 } from "../../lib/api";
+
+export async function getStaticPaths() {
+  const data = await getGamePrice("cyberpunk-2077");
+  return [{ params: { slug: data.game.slug }, props: { data } }];
+}
+
+interface Props {
+  data: GamePriceV1;
+}
+
+const { data } = Astro.props;
+const money = new Intl.NumberFormat("ko-KR", {
+  style: "currency",
+  currency: data.price.currency,
+  maximumFractionDigits: 0,
+});
+const koreanTime = new Intl.DateTimeFormat("ko-KR", {
+  timeZone: "Asia/Seoul",
+  dateStyle: "long",
+  timeStyle: "short",
+});
+const currentPrice = money.format(data.price.current_amount_minor);
+const regularPrice = data.price.regular_amount_minor
+  ? money.format(data.price.regular_amount_minor)
+  : null;
+const observedLow = money.format(data.price.observed_low_amount_minor);
+---
+
+<BaseLayout
+  title={`${data.game.title} 가격 · GamePrice KR`}
+  description={`${data.game.title} ${data.price.edition.label}의 한국 Steam 현재 가격과 추적 시작 이후 관찰된 최저가`}
+>
+  <nav class="breadcrumb" aria-label="경로">
+    <a href="/">홈</a><span aria-hidden="true">/</span><span>{data.game.title}</span>
+  </nav>
+
+  <article class="price-page">
+    <header class="game-heading">
+      <div>
+        <p class="eyebrow">{data.price.source.name} · {data.price.region}</p>
+        <h1>{data.game.title}</h1>
+        <p class="edition">{data.price.edition.label}</p>
+      </div>
+      <span class="verified">승인된 매핑</span>
+    </header>
+
+    <section class="price-grid" aria-label="가격 요약">
+      <div class="price-card current">
+        <span>현재 가격</span>
+        <strong>{currentPrice}</strong>
+        {regularPrice && <del>{regularPrice}</del>}
+        {data.price.discount_percent !== null && (
+          <em>{data.price.discount_percent}% 할인</em>
+        )}
+      </div>
+      <div class="price-card low">
+        <span>{data.price.observed_low_label}</span>
+        <strong>{observedLow}</strong>
+        <small>
+          {koreanTime.format(new Date(data.price.tracking_started_at))}부터
+        </small>
+      </div>
+    </section>
+
+    <section class="scope-note">
+      <div class="scope-icon" aria-hidden="true">i</div>
+      <div>
+        <h2>이 최저가는 무엇을 뜻하나요?</h2>
+        <p>
+          GamePrice KR이 이 상품을 추적하기 시작한 이후 직접 수집해 승인한 가격 중
+          가장 낮은 값입니다. 전체 판매 기간의 역대 최저가를 뜻하지 않습니다.
+        </p>
+      </div>
+    </section>
+
+    <dl class="details">
+      <div><dt>판매처</dt><dd>{data.price.source.name}</dd></div>
+      <div><dt>에디션</dt><dd>{data.price.edition.label}</dd></div>
+      <div><dt>통화 / 지역</dt><dd>{data.price.currency} / {data.price.region}</dd></div>
+      <div>
+        <dt>최근 관찰</dt>
+        <dd><time datetime={data.price.latest_observed_at}>{koreanTime.format(new Date(data.price.latest_observed_at))}</time></dd>
+      </div>
+    </dl>
+  </article>
+</BaseLayout>

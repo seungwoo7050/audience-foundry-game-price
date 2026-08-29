@@ -64,7 +64,8 @@ done
 
 fnm exec --using=22.22.0 -- npm --prefix web run check
 fnm exec --using=22.22.0 -- npm --prefix web run build
-fnm exec --using=22.22.0 -- npm --prefix web run test:render
+GAMEPRICE_EXPECTED_API_JSON="$GAMEPRICE_API_JSON" \
+  fnm exec --using=22.22.0 -- npm --prefix web run test:render
 fnm exec --using=22.22.0 -- npm --prefix web audit
 uv run --directory backend --with pip-audit pip-audit --local
 

@@ -1,0 +1,22 @@
+{
+  "name": "gameprice-kr-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.4.2",
+  "engines": {
+    "node": "22.22.0",
+    "npm": "11.4.2"
+  },
+  "scripts": {
+    "check": "astro check",
+    "build": "astro build"
+  },
+  "dependencies": {
+    "astro": "7.2.9"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3"
+  }
+}

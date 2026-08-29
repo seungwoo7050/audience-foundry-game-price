@@ -9,3 +9,8 @@ build/
 node_modules/
 tmp/
 .cache/
+.venv/
+__pycache__/
+*.py[cod]
+.astro/
+.coverage

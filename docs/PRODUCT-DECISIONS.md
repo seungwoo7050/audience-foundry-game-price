@@ -5,8 +5,8 @@ decision changes only through an explicit human decision and a dedicated commit.
 
 ## Repository and history
 
-- Expected repository and visibility: A new single repository is expected, with `backend/`, `web/`, and `docs/` at the root. The remote URL and visibility are not yet selected. Local work may begin, but no remote push or public release may occur until the human product owner selects them.
-- Expected baseline branch and commit: The baseline is the first commit that contains these six completed contract documents and no product implementation. The branch name and commit SHA do not exist yet and must be recorded when the repository is initialized.
+- Expected repository and visibility: The product uses the public repository `https://github.com/seungwoo7050/audience-foundry-game-price.git`, with `backend/`, `web/`, and `docs/` at the root. The human product owner approved this existing public remote on 2026-08-29. Normal non-force pushes to the approved `main` branch are authorized for the first implementation; public release or production deployment remains a separate checkpoint.
+- Expected baseline branch and commit: The approved baseline is branch `main` at commit `3c80794c25f73aa3eed188357acd02b665e7393c`, the first commit containing the six completed contract documents and no product implementation. Remote `origin/main` was verified at the same commit before implementation on 2026-08-29.
 - Legacy code/history reuse policy: No legacy implementation or history has been identified for import. Existing open-source frameworks and libraries may be added as reviewed dependencies, but competitor applications, mappings, datasets, and price histories must not be copied or presented as product-owned observations.
 - External repositories that are frozen, imported, or out of scope: No external repository is approved for import or vendoring. Competitor repositories and datasets are out of scope. A dependency may be referenced through its package manager only after version, license, maintenance status, and security posture are reviewed.
 
@@ -49,7 +49,7 @@ Order the smallest capabilities needed to close the first loop. Put the riskiest
 interface viability check before expanding dependent implementation.
 
 1. Record the exact live source request shape, terms checkpoint, accepted fields, response hash method, and failure behavior for one human-selected Steam product. Stop live work if the source cannot be approved.
-2. Pin the unresolved local tool versions needed to create reproducible lockfiles and select one PostgreSQL major before the first migration.
+2. Use the approved Python, Node.js, package-manager, and PostgreSQL versions to create reproducible lockfiles before the first migration.
 3. Create the canonical entities, database constraints, UTC timestamp policy, and additive initial migrations.
 4. Configure Django Admin and authentication for the single operator role without custom public administration UI.
 5. Implement the source adapter against deterministic fixtures, including invalid currency, missing price, timeout, duplicate, and out-of-order cases.

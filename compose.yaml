@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17.6-bookworm
+    environment:
+      POSTGRES_DB: gameprice
+      POSTGRES_USER: gameprice
+      POSTGRES_PASSWORD: gameprice-local-only
+    ports:
+      - "127.0.0.1:55432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gameprice -d gameprice"]
+      interval: 1s
+      timeout: 3s
+      retries: 20

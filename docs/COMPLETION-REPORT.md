@@ -98,16 +98,19 @@
 - Data migration/backward compatibility: `prices.0001_initial` applied to an empty
   PostgreSQL 17 database. `makemigrations --check --dry-run` reported no changes.
   The read-only reverse plan listed explicit undo operations for every model,
-  field, and constraint; it was inspected but not applied so live evidence remained
-  available. No legacy or destructive data migration occurred. `/api/v1` exactly
-  matches its checked-in fixture.
+  field, and constraint; it was inspected but not applied. The later closure gate
+  intentionally recreated the tmpfs database from empty and therefore left only
+  deterministic fixture state; exact redacted live evidence is retained in this
+  report, not as a raw response or durable local database. No legacy or destructive
+  data migration occurred. `/api/v1` exactly matches its checked-in fixture.
 - External state changed and recovery: Steam received two read-only viability GETs:
   the first exposed the scale incompatibility and the second proved adapter v2.
   Replays did not issue GETs. No remote Steam state changed, so no remote rollback
-  exists or is needed. Git received normal non-force pushes. Local Docker state is
-  one scoped tmpfs PostgreSQL container and generated Astro output; `make db-down`
-  deletes the database, and `make gate` recreates both canonical fixture state and
-  the site from committed inputs. Live state is intentionally not reproducible
+  exists or is needed. Git received normal non-force pushes. After the closure gate,
+  local Docker state is one scoped tmpfs PostgreSQL container containing only
+  deterministic fixture data plus generated Astro output; `make db-down` deletes
+  the database, and `make gate` recreates both fixture state and the site from
+  committed inputs. Live state is intentionally not retained or reproducible
   without another separately authorized read.
 
 ## Remaining work
